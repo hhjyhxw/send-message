@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icloud.dao.redEnvelope.FansSendRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.icloud.model.redEnvelope.FansSendRecord" >
+    <id column="open_id" property="openId" jdbcType="VARCHAR" />
+    <id column="activity_id" property="activityId" jdbcType="NUMERIC" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="send_status" property="sendStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    open_id, activity_id, nick_name, send_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.icloud.model.redEnvelope.FansSendRecordKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_fans_send_record
+    where open_id = #{openId,jdbcType=VARCHAR}
+      and activity_id = #{activityId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.icloud.model.redEnvelope.FansSendRecordKey" >
+    delete from t_fans_send_record
+    where open_id = #{openId,jdbcType=VARCHAR}
+      and activity_id = #{activityId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.icloud.model.redEnvelope.FansSendRecord" >
+    insert into t_fans_send_record (open_id, activity_id, nick_name, 
+      send_status)
+    values (#{openId,jdbcType=VARCHAR}, #{activityId,jdbcType=NUMERIC}, #{nickName,jdbcType=VARCHAR}, 
+      #{sendStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.icloud.model.redEnvelope.FansSendRecord" >
+    insert into t_fans_send_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=NUMERIC},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.icloud.model.redEnvelope.FansSendRecord" >
+    update t_fans_send_record
+    <set >
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where open_id = #{openId,jdbcType=VARCHAR}
+      and activity_id = #{activityId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.icloud.model.redEnvelope.FansSendRecord" >
+    update t_fans_send_record
+    set nick_name = #{nickName,jdbcType=VARCHAR},
+      send_status = #{sendStatus,jdbcType=VARCHAR}
+    where open_id = #{openId,jdbcType=VARCHAR}
+      and activity_id = #{activityId,jdbcType=NUMERIC}
+  </update>
+</mapper>

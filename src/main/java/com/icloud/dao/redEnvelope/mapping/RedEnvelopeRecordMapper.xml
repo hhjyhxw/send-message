@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icloud.dao.redEnvelope.RedEnvelopeRecordMapper">
+	<resultMap id="BaseResultMap" type="com.icloud.model.redEnvelope.RedEnvelopeRecord">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="activity_id" property="activityId" jdbcType="VARCHAR" />
+		<result column="open_id" property="openId" jdbcType="VARCHAR" />
+		<result column="nick" property="nick" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="NUMERIC" />
+		<result column="head_img" property="headImg" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+	    <result column="status" property="status" jdbcType="VARCHAR"/>
+	    <result column="mch_billno" property="mchBillno" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="findForList" parameterType="com.icloud.model.redEnvelope.RedEnvelopeRecord"
+		resultMap="BaseResultMap">
+		select t.* from t_red_envelope_record t
+		<where>
+			<if test="activityId!=null">
+				and t.activity_id=#{activityId}
+			</if>
+			<if test="openId!=null">
+			   and t.open_id=#{openId}
+			</if>
+		</where>
+		order by t.create_time desc
+	</select>
+
+	<select id="findForObject" parameterType="String" resultMap="BaseResultMap">
+		select t.* from t_red_envelope_record t where t.id=#{id}
+	</select>
+	
+	<select id="findByObject" parameterType="com.icloud.model.redEnvelope.RedEnvelopeRecord" resultMap="BaseResultMap">
+		select t.* from t_red_envelope_record t 
+        <where>
+			<if test="activityName!=null">
+				and t.activity_id=#{activityId}
+			</if>
+			<if test="openId!=null">
+			   and t.open_id=#{openId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="save" parameterType="com.icloud.model.redEnvelope.RedEnvelopeRecord"
+		keyProperty="id">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+		 select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert t_red_envelope_record (id, activity_id,open_id,nick,head_img,money,create_time,status,mch_billno)
+		values (#{id}, #{activityId,jdbcType=VARCHAR},#{openId},#{nick},#{headImg,jdbcType=VARCHAR},#{money},#{createTime,jdbcType=TIMESTAMP},#{status},#{mchBillno})
+	</insert>
+	
+</mapper>

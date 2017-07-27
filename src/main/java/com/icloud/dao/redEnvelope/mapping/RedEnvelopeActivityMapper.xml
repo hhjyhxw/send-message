@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icloud.dao.redEnvelope.RedEnvelopeActivityMapper">
+	<resultMap id="BaseResultMap" type="com.icloud.model.redEnvelope.RedEnvelopeActivity">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+		<result column="total_money" property="totalMoney" jdbcType="INTEGER" />
+		<result column="use_money" property="useMoney" jdbcType="NUMERIC" />
+		<result column="total_count" property="totalCount" jdbcType="INTEGER" />
+		<result column="use_count" property="useCount" jdbcType="INTEGER" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+	    <result column="is_allow" property="isAllow" jdbcType="VARCHAR" />
+	    <result column="pre_id" property="preId" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="findForList" parameterType="com.icloud.model.redEnvelope.RedEnvelopeActivity"
+		resultMap="BaseResultMap">
+		select t.* from t_red_envelope_activity t
+		<where>
+			<if test="activityName!=null">
+				and t.activity_name like concat(concat('%',#{activityName}),'%')
+			</if>
+		</where>
+		order by t.create_time desc
+	</select>
+
+	<select id="findForObject" parameterType="String" resultMap="BaseResultMap">
+		select t.* from t_red_envelope_activity t where t.id=#{id}
+	</select>
+	
+	<insert id="save" parameterType="com.icloud.model.redEnvelope.RedEnvelopeActivity"
+		keyProperty="id">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+		 select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert t_red_envelope_activity (id, activity_name,total_money,use_money,total_count,use_count,start_time,end_time,is_allow,pre_id,create_time)
+		values (#{id}, #{activityName,jdbcType=VARCHAR},#{totalMoney,jdbcType=INTEGER},#{useMoney},#{totalCount,jdbcType=INTEGER},#{useCount,jdbcType=INTEGER},#{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},#{isAllow},#{preId},#{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<update id="update" parameterType="com.icloud.model.redEnvelope.RedEnvelopeActivity" >
+	  update t_red_envelope_activity
+		<set>
+			<if test="useMoney != null">
+				use_money = #{useMoney,jdbcType=VARCHAR},
+			</if>
+			<if test="useCount != null">
+				use_count = #{useCount,jdbcType=VARCHAR},
+			</if>
+			<if test="isAllow != null">
+				is_allow = #{isAllow,jdbcType=VARCHAR},
+			</if>
+			<if test="preId != null">
+				pre_id = #{preId,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="selectPreActivity" resultMap="BaseResultMap">
+	  SELECT id,MAX(create_time) as create_time from t_red_envelope_activity 
+	</select>
+	
+</mapper>
